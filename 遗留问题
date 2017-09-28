@@ -1,0 +1,4 @@
+--- 单向认证中 libmbedtls.a OK, 而 libssl.a 握手失败原因分析。
+
+ mosquitto 和 ESP8266_NONOS_SDK/esp_mqtt_proj 的 MQTT SSL/TLS交互使用 ssl lib没问题，使用mbedtls会握手失败。 // Makefile中 -lssl 即决定使用ssl lib. -lmbedtls 即使用 mbedtls lib
+

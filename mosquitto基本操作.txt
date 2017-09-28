@@ -1,0 +1,46 @@
+查看证书信息：
+	openssl x509 -in certificate.pem -text -noout
+
+检查证书有效期：	// 是证书信息的一部分；只能是证书，不可是私钥
+	openssl x509 -in server.crt -noout -dates
+
+// 订阅和发布,没有 TLS
+mosquitto_sub -h 192.168.111.100 -p 8883 -t "topicA" -d
+mosquitto_pub -h 192.168.17.123 -p 8883 -t "topicA" -m "hello" -d
+
+printf("file:%s function:%s line:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+ curl -v -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Host: devicedrivetestIoTHub.azure-devices.net" -H "Origin: https://devicedrivetestIoTHub.azure-devices.net" -H "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" -H "Sec-WebSocket-Protocol: mqtt" -H "Sec-WebSocket-Version: 13" 'https://devicedrivetestIoTHub.azure-devices.net/$iothub/websocket'
+
+git clean -xdf
+
+// mosquitto.conf 文件是配置 mosquitto broker 行为的配置文件
+mosquitto.conf
+1. port
+2. cafile
+3. certfile
+4. keyfile
+
+// 启动 mosquitto 
+mosquitto -c ~/mosquitto.cfg -v 
+
+// 订阅和发布, +TLS
+//  -t:topic -h:host -p:port -m:message --cert:certificate --key:私钥
+mosquitto_sub -h 192.168.17.123 -i 111 -p 8883 -t "111" --cafile ~/openssl/ca/ca.crt --cert ~/openssl/client/client.crt --key ~/openssl/client/client.key	
+mosquitto_pub -h 192.168.17.123 -p 8883 -t "111" -m "hello" --cafile ~/openssl/ca/ca.crt --cert ~/openssl/client/client.crt --key ~/openssl/client/client.key -d
+
+// 证书格式转化 CRT -> DER
+openssl x509 -in cert.crt -outform der -out cert.der
+
+编译选项step1-step5: 1 1 2 0 5
+
+擦除 flash 数据：
+~/esp/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 erase_flash
+
+烧写 flash 数据：
+~/esp/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 write_flash 0x00000 ~/chenwu/ShareDirectory/bin/boot_v1.6.bin 0x1000 ../bin/upgrade/user1.2048.new.5.bin 0x1fe000 ~/chenwu/ShareDirectory/bin/blank.bin 0x1fc000 ~/chenwu/ShareDirectory/bin/esp_init_data_default.bin
+~/esp/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 write_flash  0x1000 ../bin/upgrade/user1.2048.new.5.bin
+~/git/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 write_flash --flash_size 4MB-c1 0x1000 ../bin/upgrade/user1.1024.new.2.bin
+~/git/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 write_flash --flash_size 4MB-c1 0x77000 esp_ca_cert.bin
+~/git/esp-idf/components/esptool_py/esptool/esptool.py --port /dev/ttyUSB0 --baud 921600 write_flash --flash_size 4MB-c1 0x78000 esp_cert_private_key.bin
+
